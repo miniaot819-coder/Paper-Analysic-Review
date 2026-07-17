@@ -69,7 +69,8 @@ class SharedPreferencesNotificationStore implements NotificationStore {
 
   @override
   Future<void> save(List<ResearchNotification> notifications) async {
-    if (notifications.isEmpty) {
+    final snapshot = notifications.take(maximumItems).toList(growable: false);
+    if (snapshot.isEmpty) {
       await clear();
       return;
     }
@@ -77,7 +78,7 @@ class SharedPreferencesNotificationStore implements NotificationStore {
     // Each notification has an independent key. Updating the main-isolate
     // snapshot therefore cannot overwrite a message concurrently inserted by
     // Firebase Messaging's background isolate.
-    for (final notification in notifications.take(maximumItems)) {
+    for (final notification in snapshot) {
       await _writeNotification(notification);
     }
     await _prune();
