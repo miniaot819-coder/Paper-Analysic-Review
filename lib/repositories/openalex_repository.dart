@@ -9,12 +9,14 @@ class OpenAlexRepository {
     OpenAlexService? service,
     this.maximumLoadedWorks = defaultMaximumLoadedWorks,
   }) : assert(maximumLoadedWorks > 0),
+       _ownsService = service == null,
        _service = service ?? OpenAlexService();
 
   static const int defaultPageSize = 100;
   static const int defaultMaximumLoadedWorks = 1000;
 
   final OpenAlexService _service;
+  final bool _ownsService;
   final int maximumLoadedWorks;
 
   int _stateRequestId = 0;
@@ -412,7 +414,7 @@ class OpenAlexRepository {
     _stateRequestId += 1;
     _autoLoadOperationId += 1;
     state.dispose();
-    _service.close();
+    if (_ownsService) _service.close();
   }
 
   int _beginStateRequest() {

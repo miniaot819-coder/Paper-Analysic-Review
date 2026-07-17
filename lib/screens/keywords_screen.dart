@@ -150,11 +150,13 @@ class _KeywordsScreenState extends State<KeywordsScreen> {
                       .toList(),
                 ),
               ),
-              const SizedBox(height: 18),
-              _KeywordSection(
-                title: 'Trend: ${trending.first.name}',
-                child: PublicationLineChart(data: trending.first.trend),
-              ),
+              if (trending.isNotEmpty) ...[
+                const SizedBox(height: 18),
+                _KeywordSection(
+                  title: 'Trend: ${trending.first.name}',
+                  child: PublicationLineChart(data: trending.first.trend),
+                ),
+              ],
               const SizedBox(height: 18),
               Text(
                 'Most frequent keywords',

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -11,6 +13,21 @@ if (file("google-services.json").exists()) {
     apply(plugin = "com.google.gms.google-services")
     apply(plugin = "com.google.firebase.crashlytics")
 }
+
+val releaseKeystoreProperties = Properties()
+val releaseKeystorePropertiesFile = rootProject.file("key.properties")
+if (releaseKeystorePropertiesFile.exists()) {
+    releaseKeystorePropertiesFile.inputStream().use {
+        releaseKeystoreProperties.load(it)
+    }
+}
+val requiredReleaseSigningProperties =
+    listOf("keyAlias", "keyPassword", "storeFile", "storePassword")
+val hasReleaseSigningConfig =
+    releaseKeystorePropertiesFile.exists() &&
+        requiredReleaseSigningProperties.all {
+            !releaseKeystoreProperties.getProperty(it).isNullOrBlank()
+        }
 
 android {
     namespace = "com.example.journal_trend_analysis"
@@ -37,11 +54,23 @@ android {
         versionName = flutter.versionName
     }
 
+    val releaseSigningConfig =
+        if (hasReleaseSigningConfig) {
+            signingConfigs.create("release") {
+                keyAlias = releaseKeystoreProperties.getProperty("keyAlias")
+                keyPassword = releaseKeystoreProperties.getProperty("keyPassword")
+                storeFile = file(releaseKeystoreProperties.getProperty("storeFile"))
+                storePassword = releaseKeystoreProperties.getProperty("storePassword")
+            }
+        } else {
+            null
+        }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            // A release without key.properties remains unsigned instead of
+            // silently falling back to the public Android debug key.
+            releaseSigningConfig?.let { signingConfig = it }
         }
     }
 }

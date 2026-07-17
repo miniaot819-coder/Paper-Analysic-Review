@@ -78,7 +78,10 @@ class TopicEvolutionAreaChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (series.isEmpty) {
+    final visibleSeries = series
+        .where((item) => item.points.isNotEmpty)
+        .toList(growable: false);
+    if (visibleSeries.isEmpty) {
       return const ChartEmpty(message: 'No yearly topic data available.');
     }
 
@@ -90,7 +93,7 @@ class TopicEvolutionAreaChart extends StatelessWidget {
           SizedBox(
             height: 230,
             child: CustomPaint(
-              painter: _TopicAreaPainter(series: series, colors: colors),
+              painter: _TopicAreaPainter(series: visibleSeries, colors: colors),
               child: const SizedBox.expand(),
             ),
           ),
@@ -98,7 +101,7 @@ class TopicEvolutionAreaChart extends StatelessWidget {
           Wrap(
             spacing: 14,
             runSpacing: 8,
-            children: List.generate(series.length, (index) {
+            children: List.generate(visibleSeries.length, (index) {
               return Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -114,7 +117,7 @@ class TopicEvolutionAreaChart extends StatelessWidget {
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 150),
                     child: Text(
-                      series[index].name,
+                      visibleSeries[index].name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -710,7 +713,7 @@ class QuartileDonutChart extends StatelessWidget {
                       width: 12,
                       height: 12,
                       decoration: BoxDecoration(
-                        color: _colors[index],
+                        color: _colors[index % _colors.length],
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -1014,6 +1017,11 @@ class _TopicAreaPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final visibleSeries = series
+        .where((item) => item.points.isNotEmpty)
+        .toList(growable: false);
+    if (visibleSeries.isEmpty || colors.isEmpty) return;
+
     const left = 30.0;
     const top = 14.0;
     const right = 10.0;
@@ -1024,7 +1032,7 @@ class _TopicAreaPainter extends CustomPainter {
       size.width - right,
       size.height - bottom,
     );
-    final maxValue = series
+    final maxValue = visibleSeries
         .expand((item) => item.points)
         .fold<int>(1, (current, point) => math.max(current, point.value));
     final gridPaint = Paint()
@@ -1035,8 +1043,12 @@ class _TopicAreaPainter extends CustomPainter {
       canvas.drawLine(Offset(chart.left, y), Offset(chart.right, y), gridPaint);
     }
 
-    for (var seriesIndex = series.length - 1; seriesIndex >= 0; seriesIndex--) {
-      final item = series[seriesIndex];
+    for (
+      var seriesIndex = visibleSeries.length - 1;
+      seriesIndex >= 0;
+      seriesIndex--
+    ) {
+      final item = visibleSeries[seriesIndex];
       final points = List.generate(item.points.length, (index) {
         final x = item.points.length == 1
             ? chart.center.dx
@@ -1073,7 +1085,7 @@ class _TopicAreaPainter extends CustomPainter {
       );
     }
 
-    final years = series.first.points;
+    final years = visibleSeries.first.points;
     final labelIndexes = <int>{0, years.length ~/ 2, years.length - 1};
     for (final index in labelIndexes) {
       final label = TextPainter(
