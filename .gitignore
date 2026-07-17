@@ -33,7 +33,48 @@ migrate_working_dir/
 /build/
 /coverage/
 /tmp/
-/patrol_test/test_bundle.dart
+/android/.gradle/
+/android/captures/
+/android/gradlew
+/android/gradlew.bat
+/android/local.properties
+/android/gradle/wrapper/gradle-wrapper.jar
+/android/**/GeneratedPluginRegistrant.java
+/android/.cxx/
+/android/key.properties
+/android/**/*.keystore
+/android/**/*.jks
+/ios/**/DerivedData/
+/ios/**/Pods/
+/ios/**/.symlinks/
+/ios/**/xcuserdata/
+/ios/**/*.mode1v3
+/ios/**/*.mode2v3
+/ios/**/*.moved-aside
+/ios/**/*.pbxuser
+/ios/**/*.perspectivev3
+/ios/**/*sync/
+/ios/**/.sconsign.dblite
+/ios/**/.tags*
+/ios/**/.vagrant/
+/ios/**/profile
+/ios/**/ServiceDefinitions.json
+/ios/Flutter/App.framework
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/ephemeral/
+/ios/Flutter/flutter_assets/
+/ios/Flutter/flutter_export_environment.sh
+/ios/Runner/GeneratedPluginRegistrant.*
+/linux/flutter/ephemeral/
+/linux/flutter/generated_plugin_registrant.*
+/linux/flutter/generated_plugins.cmake
+/macos/Flutter/ephemeral/
+/macos/Flutter/GeneratedPluginRegistrant.swift
+/windows/flutter/ephemeral/
+/windows/flutter/generated_plugin_registrant.*
+/windows/flutter/generated_plugins.cmake
 
 # Symbolication related
 app.*.symbols
@@ -53,3 +94,5 @@ app.*.map.json
 **/service_account*.json
 
 .env
+.env.*
+!.env.example

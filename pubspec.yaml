@@ -50,27 +50,6 @@ dependencies:
   shared_preferences: ^2.5.3
   url_launcher: ^6.3.2
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  patrol: 4.7.1
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^6.0.0
-
-# Patrol 4 uses patrol_test/ by default. Keep the Lab package identifiers
-# explicit so native Android tests can install, launch, and clean up the app.
-patrol:
-  app_name: Journal Trend Analyzer
-  android:
-    package_name: com.example.journal_trend_analysis
-  ios:
-    bundle_id: com.example.journalTrendAnalysis
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -81,9 +60,6 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  assets:
-    - assets/search.png
-
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

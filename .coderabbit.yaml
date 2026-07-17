@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+reviews:
+  profile: assertive
+  high_level_summary: true
+  high_level_summary_in_walkthrough: true
+  high_level_summary_instructions: |
+    Add a section titled "Lab 03 Risk Assessment" to the review walkthrough.
+
+    Base the assessment only on evidence-backed findings from this pull
+    request. Preserve CodeRabbit's native severity and map it to the Lab risk
+    level as follows:
+    - Critical or Major -> High
+    - Minor -> Medium
+    - Trivial or Info -> Low
+
+    Use these meanings:
+    - High: security/privacy exposure, authentication bypass, data loss,
+      application crash, corrupted analytics, or broken core functionality.
+    - Medium: incorrect behavior, asynchronous race, Firebase lifecycle or
+      recovery defect, material performance issue, or MVVM violation.
+    - Low: maintainability, readability, minor UX, documentation, or another
+      non-blocking quality improvement.
+
+    Output a Markdown table with these columns:
+    ID | Lab Risk | Native Severity | File/Line | Finding | Impact |
+    Recommended Fix | Status
+
+    List the highest-risk findings first. Never invent findings to reach a
+    minimum count. End with "Overall Lab Risk: High", "Overall Lab Risk:
+    Medium", or "Overall Lab Risk: Low", using the highest risk present.
+
+  path_filters:
+    - "lib/**"
+    - "android/**"
+    - "ios/**"
+    - "pubspec.yaml"
+    - "firebase.json"
+    - "storage.rules"
+    - "!**/*.g.dart"
+    - "!**/GeneratedPluginRegistrant.*"
+    - "!**/*.lock"
+    - "!build/**"
+
+  path_instructions:
+    - path: "lib/**/*.dart"
+      instructions: |
+        Review correctness, Firebase authentication and user-data isolation,
+        asynchronous lifecycle safety, OpenAlex cursor pagination,
+        cancellation and retry behavior, error handling, performance, and
+        MVVM separation. Add exactly one explicit `Lab risk: High`, `Lab risk:
+        Medium`, or `Lab risk: Low` line to every actionable finding.
+
+    - path: "android/**"
+      instructions: |
+        Review Firebase, authentication, notification, permission, and build
+        configuration for security or runtime defects. Never request private
+        keys, service accounts, or FCM server credentials. Add an explicit Lab
+        risk level to each actionable finding.
+
+    - path: "ios/**"
+      instructions: |
+        Review Firebase and notification readiness for a future IPA build,
+        including configuration, capabilities, permissions, and lifecycle.
+        Distinguish Android Lab blockers from iOS-only readiness gaps and add
+        an explicit Lab risk level to each actionable finding.
+
+    - path: "storage.rules"
+      instructions: |
+        Review authorization, per-user isolation, write validation, metadata,
+        content type, and size restrictions. Treat unauthorized cross-user
+        access or unrestricted writes as High risk.
