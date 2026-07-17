@@ -14,11 +14,13 @@ class ResearchTabViewModel extends ChangeNotifier {
     OpenAlexRepository? repository,
   }) : _topic = initialTopic.trim(),
        _publicationLimit = _normalizeLimitValue(initialPublicationLimit),
+       _ownsRepository = repository == null,
        _repository = repository ?? OpenAlexRepository() {
     _repository.state.addListener(_forwardRepositoryState);
   }
 
   final OpenAlexRepository _repository;
+  final bool _ownsRepository;
 
   String _topic;
   int _publicationLimit;
@@ -129,7 +131,7 @@ class ResearchTabViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _repository.state.removeListener(_forwardRepositoryState);
-    _repository.dispose();
+    if (_ownsRepository) _repository.dispose();
     super.dispose();
   }
 }

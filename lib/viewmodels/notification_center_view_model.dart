@@ -252,7 +252,13 @@ class NotificationCenterViewModel extends ChangeNotifier {
   Future<void> clearAll() async {
     _notifications.clear();
     _notifyListeners();
-    await _persistCurrent();
+    try {
+      await _store.clear();
+    } catch (_) {
+      if (_isDisposed) return;
+      _errorMessage = 'Unable to clear the Notification Center.';
+      _notifyListeners();
+    }
   }
 
   Future<void> _handleForegroundMessage(RemoteMessage message) async {

@@ -25,6 +25,11 @@ class ProfileScreen extends StatelessWidget {
   ) async {
     try {
       await reportViewModel.cancel();
+    } catch (_) {
+      // Export cancellation is best effort and must never block sign-out.
+    }
+
+    try {
       await authViewModel.signOut();
     } catch (_) {
       if (!context.mounted) return;
